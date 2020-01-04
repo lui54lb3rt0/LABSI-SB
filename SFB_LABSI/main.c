@@ -2,7 +2,7 @@
 Language            :      C
 Year                :      2019/2020
 Class               :      LABSI
-Authors                    :      Lu?s Silva | Jo?o Loureiro
+Authors             :      Luis Silva | Joao Loureiro
 E-mail              :      1101420@isep.ipp.pt | 1131109@isep.ipp.pt
 *********************************************************/
 
@@ -162,38 +162,18 @@ void Read_RawValue()
 
 }
 
-void Read_RawValue_test()
-{
-
-	//MPU_Start_Loc();            /* Read Gyro values */
-
-	Acc_x = 100;//(((int)I2C_Read_Ack()<<8) | (int)I2C_Read_Ack());
-	Acc_y = 1245;//(((int)I2C_Read_Ack()<<8) | (int)I2C_Read_Ack());
-	Acc_z = 234;//(((int)I2C_Read_Ack()<<8) | (int)I2C_Read_Ack());
-	Gyro_x = 345;//(((int)I2C_Read_Ack()<<8) | (int)I2C_Read_Ack());
-	Gyro_y =56; //(((int)I2C_Read_Ack()<<8) | (int)I2C_Read_Ack());
-	Gyro_z = 787;//(((int)I2C_Read_Ack()<<8) | (int)I2C_Read_Nack());
-	// I2C_Stop();
-
-}
-
-
 void AngleCalc()
 {
-	//---ACC X---
-	//    Acceleration_angle[0] = atan((Acc_y/16384.0)/sqrt(pow((Acc_x/16384.0),2) + pow((Acc_z/16384.0),2)))*rad_to_deg;
+
 	//---ACC  Y---
 	Acceleration_angle[1] = atan(-1*(Acc_x/16384.0)/sqrt(pow((Acc_y/16384.0),2) + pow((Acc_z/16384.0),2)))*rad_to_deg;
 
-	//---GYRO X---
-	//  Gyro_angle[0] = Gyro_x/131.0;
+
 	//---GYRO Y---
 	Gyro_angle[1] = Gyro_y/131.0;
 
 	
 	//Filtro complementar
-	//---X axis angle--- Roll
-	//Total_angle[0] = 0.98 *(Total_angle[0] + Gyro_angle[0]*elapsedTime) + 0.02*Acceleration_angle[0];
 	//---Y axis angle--- Pitch
 	Total_angle[1] = 0.98 *(Total_angle[1] + Gyro_angle[1]*elapsedTime) + 0.02*Acceleration_angle[1];
 }
@@ -267,8 +247,6 @@ int main()
 			
 			PID();
 			
-			//PWM = -500*abs(pid_tot) + 100; // rápida
-			//PWM = -0.9806*abs(pid_tot) + 15.799; // rápida
 			PWM = 40.302*exp(-0.31*abs(pid_tot)); // a que funciona fixe
 			if ((error > -0.05) && (error <= 0.05)) PWM =10800;
 			
@@ -301,7 +279,6 @@ int main()
 			}
 			
 			timerFlag=0;
-			// PORTD = (0<<DDD4);
 		}
 	}
 }

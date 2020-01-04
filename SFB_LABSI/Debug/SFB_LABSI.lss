@@ -13,21 +13,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000013e4  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000d0  00000000  00000000  00001424  2**0
+  5 .debug_aranges 000000c8  00000000  00000000  00001424  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001099  00000000  00000000  000014f4  2**0
+  6 .debug_info   00001084  00000000  00000000  000014ec  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000008e6  00000000  00000000  0000258d  2**0
+  7 .debug_abbrev 000008d0  00000000  00000000  00002570  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000009f1  00000000  00000000  00002e73  2**0
+  8 .debug_line   000009bc  00000000  00000000  00002e40  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000002b0  00000000  00000000  00003864  2**2
+  9 .debug_frame  000002a0  00000000  00000000  000037fc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000062a  00000000  00000000  00003b14  2**0
+ 10 .debug_str    000005c6  00000000  00000000  00003a9c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000867  00000000  00000000  0000413e  2**0
+ 11 .debug_loc    00000867  00000000  00000000  00004062  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000b0  00000000  00000000  000049a5  2**0
+ 12 .debug_ranges 000000a8  00000000  00000000  000048c9  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1245,8 +1245,6 @@ int main()
 			PID();
      934:	0e 94 31 03 	call	0x662	; 0x662 <PID>
 			
-			//PWM = -500*abs(pid_tot) + 100; // rápida
-			//PWM = -0.9806*abs(pid_tot) + 15.799; // rápida
 			PWM = 40.302*exp(-0.31*abs(pid_tot)); // a que funciona fixe
      938:	60 91 30 01 	lds	r22, 0x0130	; 0x800130 <pid_tot>
      93c:	70 91 31 01 	lds	r23, 0x0131	; 0x800131 <pid_tot+0x1>
