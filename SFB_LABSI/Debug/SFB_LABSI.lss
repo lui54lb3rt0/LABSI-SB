@@ -1234,7 +1234,7 @@ int main()
      928:	81 30       	cpi	r24, 0x01	; 1
      92a:	29 f7       	brne	.-54     	; 0x8f6 <main+0xb8>
 		{
-			Read_RawValue();	// Read gyro and acc from MPU6050
+			Read_RawValue();							// Read gyro and acc from MPU6050
      92c:	0e 94 c0 01 	call	0x380	; 0x380 <Read_RawValue>
 			AngleCalc();
      930:	0e 94 57 02 	call	0x4ae	; 0x4ae <AngleCalc>
@@ -1242,7 +1242,7 @@ int main()
 			PID();
      934:	0e 94 31 03 	call	0x662	; 0x662 <PID>
 			
-			PWM = 40.302*exp(-0.31*abs(pid_tot)); // a que funciona fixe
+			PWM = 40.302*exp(-0.31*abs(pid_tot));		// Works well
      938:	60 91 30 01 	lds	r22, 0x0130	; 0x800130 <pid_tot>
      93c:	70 91 31 01 	lds	r23, 0x0131	; 0x800131 <pid_tot+0x1>
      940:	80 91 32 01 	lds	r24, 0x0132	; 0x800132 <pid_tot+0x2>
