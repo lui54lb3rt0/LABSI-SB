@@ -51,7 +51,7 @@ float Acceleration_angle[2];
 float Gyro_angle[2];
 float Total_angle[2];
 
-float elapsedTime = 0.001408;           //tempo relativo ? frequ?ncia de aquisi??o TIMER0
+float elapsedTime = 0.001408;           //TS - time sample
 float rad_to_deg = 180/3.141592654;
 
 int PWM, error, previous_error;
@@ -60,21 +60,16 @@ float pid_i=0;
 float pid_d=0;
 float pid_tot=0;
 float previous_pid_tot = 0;
-/////////////////PID CONSTANTS/////////////////
-float kp = 0;//3.55
-float ki = 0;
-float kd = 0;//2.05
 
+/////////////////PID CONSTANTS/////////////////
+float kp = 0;
+float ki = 0;
+float kd = 0;
 ///////////////////////////////////////////////
 
 float desired_angle = 0; //This is the angle in which we want the balance to stay steady
 
-/* duty cycle define functions for the motors and for the leds */
-#define duty(val) (255*val)/100 //      % Duty Cycle
-#define dutym(valbom) ((-100*valbom)+1000)
-
 /* Functions start here */
-
 void inic()
 {
 	
@@ -164,14 +159,11 @@ void Read_RawValue()
 
 void AngleCalc()
 {
-
 	//---ACC  Y---
 	Acceleration_angle[1] = atan(-1*(Acc_x/16384.0)/sqrt(pow((Acc_y/16384.0),2) + pow((Acc_z/16384.0),2)))*rad_to_deg;
 
-
 	//---GYRO Y---
 	Gyro_angle[1] = Gyro_y/131.0;
-
 	
 	//Filtro complementar
 	//---Y axis angle--- Pitch
@@ -209,10 +201,8 @@ void PID()
 	{
 		PORTC = 0b00000011;
 	}
-
 	
 	pid_tot = sat(pid_tot,-9,9);		//-10 10
-	
 	
 	previous_error = error;
 	previous_pid_tot = pid_tot;
@@ -228,7 +218,7 @@ int main()
 	MPU6050_Init();                                      // Initialize MPU6050
 	desired_angle = 0;
 	kp =0.55;
-	ki = ((kp/0.9)*(elapsedTime/2));					//kp/1
+	ki = ((kp/0.9)*(elapsedTime/2));
 
 	while(1)
 	{
@@ -237,7 +227,6 @@ int main()
 			OCR1A = 65535;
 			OCR1B = 65535;
 			desired_angle = Total_angle[1];
-			
 		}
 		
 		if (timerFlag==1)

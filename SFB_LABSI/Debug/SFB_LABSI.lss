@@ -987,7 +987,6 @@ void PID()
      796:	83 e0       	ldi	r24, 0x03	; 3
      798:	88 b9       	out	0x08, r24	; 8
 	}
-
 	
 	pid_tot = sat(pid_tot,-9,9);		//-10 10
      79a:	c0 90 30 01 	lds	r12, 0x0130	; 0x800130 <pid_tot>
@@ -1048,17 +1047,16 @@ float sat(float _pid, int umin, int umax)
      7ee:	f1 ec       	ldi	r31, 0xC1	; 193
      7f0:	ff 2e       	mov	r15, r31
      7f2:	f0 2d       	mov	r31, r0
+	if (error >= 0)
 	{
 		PORTC = 0b00000011;
 	}
-
 	
 	pid_tot = sat(pid_tot,-9,9);		//-10 10
      7f4:	c0 92 30 01 	sts	0x0130, r12	; 0x800130 <pid_tot>
      7f8:	d0 92 31 01 	sts	0x0131, r13	; 0x800131 <pid_tot+0x1>
      7fc:	e0 92 32 01 	sts	0x0132, r14	; 0x800132 <pid_tot+0x2>
      800:	f0 92 33 01 	sts	0x0133, r15	; 0x800133 <pid_tot+0x3>
-	
 	
 	previous_error = error;
      804:	80 91 a4 01 	lds	r24, 0x01A4	; 0x8001a4 <error>
@@ -1132,7 +1130,7 @@ int main()
      882:	90 93 29 01 	sts	0x0129, r25	; 0x800129 <kp+0x1>
      886:	a0 93 2a 01 	sts	0x012A, r26	; 0x80012a <kp+0x2>
      88a:	b0 93 2b 01 	sts	0x012B, r27	; 0x80012b <kp+0x3>
-	ki = ((kp/0.9)*(elapsedTime/2));					//kp/1
+	ki = ((kp/0.9)*(elapsedTime/2));
      88e:	20 e0       	ldi	r18, 0x00	; 0
      890:	30 e0       	ldi	r19, 0x00	; 0
      892:	40 e0       	ldi	r20, 0x00	; 0
@@ -1201,7 +1199,7 @@ int main()
      8f0:	4f 2e       	mov	r4, r31
      8f2:	51 2c       	mov	r5, r1
      8f4:	f0 2d       	mov	r31, r0
-	ki = ((kp/0.9)*(elapsedTime/2));					//kp/1
+	ki = ((kp/0.9)*(elapsedTime/2));
 
 	while(1)
 	{
@@ -1229,7 +1227,6 @@ int main()
      918:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <__data_end+0x1>
      91c:	a0 93 22 01 	sts	0x0122, r26	; 0x800122 <__data_end+0x2>
      920:	b0 93 23 01 	sts	0x0123, r27	; 0x800123 <__data_end+0x3>
-			
 		}
 		
 		if (timerFlag==1)
