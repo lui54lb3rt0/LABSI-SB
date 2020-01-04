@@ -6,16 +6,16 @@ Authors             :      Luis Silva | Joao Loureiro
 E-mail              :      1101420@isep.ipp.pt | 1131109@isep.ipp.pt
 *********************************************************/
 
-#define F_CPU 16000000UL                                                  /* Define CPU clock Frequency e.g. here its 16MHz */
-#include <avr/io.h>                                                              /* Include AVR std. library file */
-#include <avr/interrupt.h>                                                /* Include AVR interrupt library file */
-#include <util/delay.h>                                                          /* Include delay header file */
-#include <inttypes.h>                                                            /* Include integer type header file */
-#include <stdlib.h>                                                              /* Include standard library file */
+#define F_CPU 16000000UL								/* Define CPU clock Frequency e.g. here its 16MHz */
+#include <avr/io.h>										/* Include AVR std. library file */
+#include <avr/interrupt.h>								/* Include AVR interrupt library file */
+#include <util/delay.h>									/* Include delay header file */
+#include <inttypes.h>									/* Include integer type header file */
+#include <stdlib.h>										/* Include standard library file */
 #include <stdio.h>
 #include <stdint.h>
-#include "MPU6050_res_define.h"                                           /* Include MPU6050 register define file */
-#include "I2C_Master_H_file.h"                                            /* Include I2C Master header file */
+#include "MPU6050_res_define.h"							/* Include MPU6050 register define file */
+#include "I2C_Master_H_file.h"							/* Include I2C Master header file */
 
 typedef struct USARTRX
 {
@@ -51,7 +51,7 @@ float Acceleration_angle[2];
 float Gyro_angle[2];
 float Total_angle[2];
 
-float elapsedTime = 0.001408;           //TS - time sample
+float elapsedTime = 0.001408;							//TS - time sample
 float rad_to_deg = 180/3.141592654;
 
 int PWM, error, previous_error;
@@ -67,38 +67,38 @@ float ki = 0;
 float kd = 0;
 ///////////////////////////////////////////////
 
-float desired_angle = 0; //This is the angle in which we want the balance to stay steady
+float desired_angle = 0;								//This is the angle in which we want the balance to stay steady
 
 /* Functions start here */
 void inic()
 {
 	
-	DDRC = 0x0F;		// Set PC0 & PC1 as output to Motor direction & scope test probes
-	DDRB = 0x06;		// Set PB1 and PB2 as output OC1A & OC1B
+	DDRC = 0x0F;										// Set PC0 & PC1 as output to Motor direction & scope test probes
+	DDRB = 0x06;										// Set PB1 and PB2 as output OC1A & OC1B
 	DDRD = (1<<DDD3) | (1<<DDD4) | (1<<DDD5) | (1<<DDD6) ;
 
 	PORTD = (0<<DDD2) | (1<<DDD3)  | (1<<DDD5) | (1<<DDD6);
 	PORTC = 0b00000011;
 
 	/* Timer 1 */
-	TCCR1A = ((1 << COM1A0) | (1 << COM1B0));									// Enable OC1A e OC1B to motors
-	TCCR1B = ((1 << CS12) | (1 << WGM12));										// CLKIO/256 (From prescaler) | Mode CTC
-	OCR1A = 65535;																// motor speed right
-	OCR1B = 65535;																// motor speed left
+	TCCR1A = ((1 << COM1A0) | (1 << COM1B0));			// Enable OC1A e OC1B to motors
+	TCCR1B = ((1 << CS12) | (1 << WGM12));				// CLKIO/256 (From prescaler) | Mode CTC
+	OCR1A = 65535;										// motor speed right
+	OCR1B = 65535;										// motor speed left
 
 
 	/* Timer 2 */
-	TCCR2A = (1<<WGM21);														// MODE CTC
-	TCCR2B = ((1 << CS21) | (1 << CS22));										// CLKIO/256 (From prescaler)
-	TIMSK2 = (1 << OCIE2A);													// Enable TIMER0
-	OCR2A = 88;																	// ~0.001088s  ~900Hz    68
+	TCCR2A = (1<<WGM21);								// MODE CTC
+	TCCR2B = ((1 << CS21) | (1 << CS22));				// CLKIO/256 (From prescaler)
+	TIMSK2 = (1 << OCIE2A);								// Enable TIMER0
+	OCR2A = 88;											// ~0.001088s  ~900Hz    68
 
 	/* USART */
 	UBRR0H=0;
-	UBRR0L=51;									// BAUDRATE 38400
-	UCSR0A=(1<<U2X0);							// Double Speed
-	UCSR0B=(1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);	// RX Complete Interrupt Enable, Receiver Enable; transmite Enable
-	UCSR0C=(1<<UCSZ01)|(1<<UCSZ00);				// 8 bits
+	UBRR0L=51;											// BAUDRATE 38400
+	UCSR0A=(1<<U2X0);									// Double Speed
+	UCSR0B=(1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);			// RX Complete Interrupt Enable, Receiver Enable; transmite Enable
+	UCSR0C=(1<<UCSZ01)|(1<<UCSZ00);						// 8 bits
 	
 	sei();
 	
@@ -138,9 +138,9 @@ void MPU6050_Init()                                     /* Gyro initialization f
 
 void MPU_Start_Loc()
 {
-	I2C_Start_Wait(0xD0);							/* I2C start with device write address */
+	I2C_Start_Wait(0xD0);								/* I2C start with device write address */
 	I2C_Write(ACCEL_XOUT_H);							/* Write start location address from where to read */
-	I2C_Repeated_Start(0xD1);						/* I2C start with device read address */
+	I2C_Repeated_Start(0xD1);							/* I2C start with device read address */
 }
 
 void Read_RawValue()
@@ -165,7 +165,7 @@ void AngleCalc()
 	//---GYRO Y---
 	Gyro_angle[1] = Gyro_y/131.0;
 	
-	//Filtro complementar
+	//Complementary Filter
 	//---Y axis angle--- Pitch
 	Total_angle[1] = 0.98 *(Total_angle[1] + Gyro_angle[1]*elapsedTime) + 0.02*Acceleration_angle[1];
 }
@@ -231,12 +231,12 @@ int main()
 		
 		if (timerFlag==1)
 		{
-			Read_RawValue();	// Read gyro and acc from MPU6050
+			Read_RawValue();							// Read gyro and acc from MPU6050
 			AngleCalc();
 			
 			PID();
 			
-			PWM = 40.302*exp(-0.31*abs(pid_tot)); // a que funciona fixe
+			PWM = 40.302*exp(-0.31*abs(pid_tot));		// Works well
 			if ((error > -0.05) && (error <= 0.05)) PWM =10800;
 			
 			if ( (Total_angle[1] >= 0) && (Total_angle[1] <= 0.5)) {
